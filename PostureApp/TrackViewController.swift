@@ -8,10 +8,22 @@
 
 import UIKit
 
+
+//class Example {
+//    var exampleField: String?
+//
+//    init(prField:String){
+//        self.exampleField = prField
+//    }
+//}
+
 class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
    
     @IBOutlet weak var table: UITableView!
+    
+//     var products = [Example]()
+    var products = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,12 +31,18 @@ class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDat
         table.delegate = self
         table.dataSource = self
         
+        products.append("Sitting")
+         products.append("Standing")
+         products.append("Squatting")
+        
+       
+        
 
         // Do any additional setup after loading the view.
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return products.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -36,8 +54,20 @@ class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        cell.textLabel?.text = "Hello World"
 //        return cell
         let customCell = tableView.dequeueReusableCell(withIdentifier: ActivityTableViewCell.identifer, for: indexPath) as! ActivityTableViewCell
-        customCell.configure(with: "Custom Cell", imageName: "gear")
+        customCell.configure(with: products[indexPath.row], imageName: "gear")
         return customCell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let vc = ResultsViewController()
+//        navigationController?.pushViewController(vc, animated: true)
+        performSegue(withIdentifier:"showAngleResults" , sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? ResultsViewController {
+            destination.activity = products[(table.indexPathForSelectedRow?.row)!]
+        }
     }
     
 
