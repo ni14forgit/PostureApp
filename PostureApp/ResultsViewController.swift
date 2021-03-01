@@ -13,6 +13,9 @@ class ResultsViewController: UIViewController {
     @IBOutlet weak var labelOne: UILabel?
     @IBOutlet weak var labelTwo: UILabel?
     @IBOutlet weak var trackButton: UIButton?
+    @IBOutlet weak var topArrows: UIImageView?
+    @IBOutlet weak var bottomArrows: UIImageView?
+
     
     
     var activity: String?
@@ -25,9 +28,22 @@ class ResultsViewController: UIViewController {
         
         trackButton?.layer.cornerRadius = 5
         trackButton?.clipsToBounds = true
+        
+        topArrows?.image = UIImage(named:"up")
+        bottomArrows?.image = UIImage(named:"down")
 
         // Do any additional setup after loading the view.
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showActiveResults",
+            let destinationVC = segue.destination as? ActiveResultsViewController {
+            destinationVC.leftImage = "up"
+            destinationVC.rightImage = "neutral"
+        }
+    }
+    
+    
     
 
     /*

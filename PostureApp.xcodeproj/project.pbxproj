@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D45F9F0C25ED4176006A8228 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */; };
 		D4679C3825E4729F00DD5215 /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */; };
 		D4679C3925E4729F00DD5215 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4679C3725E4729F00DD5215 /* ActivityTableViewCell.xib */; };
 		D47E7DE825E4120F00630807 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47E7DE725E4120F00630807 /* AppDelegate.swift */; };
@@ -16,10 +17,12 @@
 		D47E7DF125E4121100630807 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D47E7DF025E4121100630807 /* Assets.xcassets */; };
 		D47E7DF425E4121100630807 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D47E7DF225E4121100630807 /* LaunchScreen.storyboard */; };
 		D48D2ABA25E84CBB00BC5582 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */; };
+		D4D8FC1D25EC75C800EEDD00 /* ActiveResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */; };
 		D4F3EDAC25E4313F0004A595 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F3EDAB25E4313F0004A595 /* TrackViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
 		D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
 		D4679C3725E4729F00DD5215 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
 		D47E7DE425E4120F00630807 /* PostureApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostureApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -31,6 +34,7 @@
 		D47E7DF325E4121100630807 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D47E7DF525E4121100630807 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
+		D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveResultsViewController.swift; sourceTree = "<group>"; };
 		D4F3EDAB25E4313F0004A595 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,6 +79,8 @@
 				D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */,
 				D4679C3725E4729F00DD5215 /* ActivityTableViewCell.xib */,
 				D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */,
+				D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */,
+				D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */,
 			);
 			path = PostureApp;
 			sourceTree = "<group>";
@@ -152,7 +158,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4F3EDAC25E4313F0004A595 /* TrackViewController.swift in Sources */,
+				D45F9F0C25ED4176006A8228 /* GoalsViewController.swift in Sources */,
 				D47E7DEC25E4120F00630807 /* ViewController.swift in Sources */,
+				D4D8FC1D25EC75C800EEDD00 /* ActiveResultsViewController.swift in Sources */,
 				D4679C3825E4729F00DD5215 /* ActivityTableViewCell.swift in Sources */,
 				D47E7DE825E4120F00630807 /* AppDelegate.swift in Sources */,
 				D47E7DEA25E4120F00630807 /* SceneDelegate.swift in Sources */,
