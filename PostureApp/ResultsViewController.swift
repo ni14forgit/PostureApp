@@ -10,11 +10,8 @@ import UIKit
 
 class ResultsViewController: UIViewController {
     
-    @IBOutlet weak var labelOne: UILabel?
-    @IBOutlet weak var labelTwo: UILabel?
     @IBOutlet weak var trackButton: UIButton?
-    @IBOutlet weak var topArrows: UIImageView?
-    @IBOutlet weak var bottomArrows: UIImageView?
+
 
     
     
@@ -23,14 +20,15 @@ class ResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        labelOne?.text = activity
-        labelTwo?.text = "label2"
+//        labelOne?.text = activity
+//        labelTwo?.text = "label2"
         
         trackButton?.layer.cornerRadius = 5
         trackButton?.clipsToBounds = true
+        trackButton?.center = view.center
         
-        topArrows?.image = UIImage(named:"up")
-        bottomArrows?.image = UIImage(named:"down")
+//        topArrows?.image = UIImage(named:"up")
+//        bottomArrows?.image = UIImage(named:"down")
 
         // Do any additional setup after loading the view.
     }
@@ -42,7 +40,7 @@ class ResultsViewController: UIViewController {
             destinationVC.rightImage = "neutral"
         }
     }
-    
+
     
     
 
