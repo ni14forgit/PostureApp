@@ -36,8 +36,8 @@ class ResultsViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showActiveResults",
             let destinationVC = segue.destination as? ActiveResultsViewController {
-            destinationVC.leftImage = "up"
-            destinationVC.rightImage = "neutral"
+//            destinationVC.leftImage = "up"
+//            destinationVC.rightImage = "neutral"
         }
     }
 

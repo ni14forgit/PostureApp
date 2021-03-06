@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		80D41B7A38F04152CA55E49E /* Pods_PostureApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2E0ABA3A5DA57063844E745 /* Pods_PostureApp.framework */; };
 		D45F9F0C25ED4176006A8228 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */; };
 		D4679C3825E4729F00DD5215 /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */; };
 		D4679C3925E4729F00DD5215 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4679C3725E4729F00DD5215 /* ActivityTableViewCell.xib */; };
@@ -36,6 +37,9 @@
 		D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveResultsViewController.swift; sourceTree = "<group>"; };
 		D4F3EDAB25E4313F0004A595 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
+		D8D6808DCD9F810A3D3F711F /* Pods-PostureApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PostureApp.release.xcconfig"; path = "Target Support Files/Pods-PostureApp/Pods-PostureApp.release.xcconfig"; sourceTree = "<group>"; };
+		E2E0ABA3A5DA57063844E745 /* Pods_PostureApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PostureApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB15A463F8CB04C7A5BFF45D /* Pods-PostureApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PostureApp.debug.xcconfig"; path = "Target Support Files/Pods-PostureApp/Pods-PostureApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,17 +47,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80D41B7A38F04152CA55E49E /* Pods_PostureApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		076D029C0779501949112DD0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2E0ABA3A5DA57063844E745 /* Pods_PostureApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		09AB35E1846D0A5F12459E7A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EB15A463F8CB04C7A5BFF45D /* Pods-PostureApp.debug.xcconfig */,
+				D8D6808DCD9F810A3D3F711F /* Pods-PostureApp.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		D47E7DDB25E4120F00630807 = {
 			isa = PBXGroup;
 			children = (
 				D47E7DE625E4120F00630807 /* PostureApp */,
 				D47E7DE525E4120F00630807 /* Products */,
+				09AB35E1846D0A5F12459E7A /* Pods */,
+				076D029C0779501949112DD0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,9 +117,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D47E7DF825E4121100630807 /* Build configuration list for PBXNativeTarget "PostureApp" */;
 			buildPhases = (
+				9A7F211390E0C8EEA7630848 /* [CP] Check Pods Manifest.lock */,
 				D47E7DE025E4120F00630807 /* Sources */,
 				D47E7DE125E4120F00630807 /* Frameworks */,
 				D47E7DE225E4120F00630807 /* Resources */,
+				0037C24A809281B98438045F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -151,6 +178,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0037C24A809281B98438045F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PostureApp/Pods-PostureApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PostureApp/Pods-PostureApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PostureApp/Pods-PostureApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9A7F211390E0C8EEA7630848 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PostureApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D47E7DE025E4120F00630807 /* Sources */ = {
@@ -306,6 +375,7 @@
 		};
 		D47E7DF925E4121100630807 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EB15A463F8CB04C7A5BFF45D /* Pods-PostureApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -323,6 +393,7 @@
 		};
 		D47E7DFA25E4121100630807 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8D6808DCD9F810A3D3F711F /* Pods-PostureApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
