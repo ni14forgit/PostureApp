@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		80D41B7A38F04152CA55E49E /* Pods_PostureApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2E0ABA3A5DA57063844E745 /* Pods_PostureApp.framework */; };
+		D44FA41126111EBE00EB1050 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FA40F26111EBD00EB1050 /* BlePeripheral.swift */; };
+		D44FA41226111EBE00EB1050 /* CBUUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FA41026111EBE00EB1050 /* CBUUIDs.swift */; };
+		D44FA4162611208F00EB1050 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FA4152611208F00EB1050 /* ConsoleViewController.swift */; };
+		D44FA41E261128F800EB1050 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44FA41D261128F800EB1050 /* TableViewCell.swift */; };
 		D45551EF26029363005BAFD0 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45551EE26029363005BAFD0 /* SummaryViewController.swift */; };
 		D45F9F0C25ED4176006A8228 /* GoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */; };
 		D4679C3825E4729F00DD5215 /* ActivityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */; };
@@ -19,12 +23,16 @@
 		D47E7DF125E4121100630807 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D47E7DF025E4121100630807 /* Assets.xcassets */; };
 		D47E7DF425E4121100630807 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D47E7DF225E4121100630807 /* LaunchScreen.storyboard */; };
 		D48D2ABA25E84CBB00BC5582 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */; };
+		D49EE2BD26178447005EE24B /* BluetoothViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49EE2BC26178447005EE24B /* BluetoothViewController.swift */; };
 		D4D8FC1D25EC75C800EEDD00 /* ActiveResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */; };
-		D4DBC4AD260C39B600675A7B /* TestHardwareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DBC4AC260C39B600675A7B /* TestHardwareViewController.swift */; };
 		D4F3EDAC25E4313F0004A595 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F3EDAB25E4313F0004A595 /* TrackViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D44FA40F26111EBD00EB1050 /* BlePeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
+		D44FA41026111EBE00EB1050 /* CBUUIDs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBUUIDs.swift; sourceTree = "<group>"; };
+		D44FA4152611208F00EB1050 /* ConsoleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
+		D44FA41D261128F800EB1050 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		D45551EE26029363005BAFD0 /* SummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
 		D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewController.swift; sourceTree = "<group>"; };
 		D4679C3625E4729F00DD5215 /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
@@ -38,8 +46,8 @@
 		D47E7DF325E4121100630807 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D47E7DF525E4121100630807 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D48D2AB925E84CBB00BC5582 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
+		D49EE2BC26178447005EE24B /* BluetoothViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothViewController.swift; sourceTree = "<group>"; };
 		D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveResultsViewController.swift; sourceTree = "<group>"; };
-		D4DBC4AC260C39B600675A7B /* TestHardwareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHardwareViewController.swift; sourceTree = "<group>"; };
 		D4F3EDAB25E4313F0004A595 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
 		D8D6808DCD9F810A3D3F711F /* Pods-PostureApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PostureApp.release.xcconfig"; path = "Target Support Files/Pods-PostureApp/Pods-PostureApp.release.xcconfig"; sourceTree = "<group>"; };
 		E2E0ABA3A5DA57063844E745 /* Pods_PostureApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PostureApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +83,32 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		D44FA40E26111E7400EB1050 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D44FA40F26111EBD00EB1050 /* BlePeripheral.swift */,
+				D44FA41026111EBE00EB1050 /* CBUUIDs.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D44FA4142611207B00EB1050 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D44FA4152611208F00EB1050 /* ConsoleViewController.swift */,
+				D49EE2BC26178447005EE24B /* BluetoothViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		D44FA41C261128E300EB1050 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D44FA41D261128F800EB1050 /* TableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		D47E7DDB25E4120F00630807 = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +130,9 @@
 		D47E7DE625E4120F00630807 /* PostureApp */ = {
 			isa = PBXGroup;
 			children = (
+				D44FA41C261128E300EB1050 /* View */,
+				D44FA4142611207B00EB1050 /* ViewController */,
+				D44FA40E26111E7400EB1050 /* Model */,
 				D47E7DE725E4120F00630807 /* AppDelegate.swift */,
 				D47E7DE925E4120F00630807 /* SceneDelegate.swift */,
 				D47E7DEB25E4120F00630807 /* ViewController.swift */,
@@ -110,7 +147,6 @@
 				D4D8FC1C25EC75C800EEDD00 /* ActiveResultsViewController.swift */,
 				D45F9F0B25ED4176006A8228 /* GoalsViewController.swift */,
 				D45551EE26029363005BAFD0 /* SummaryViewController.swift */,
-				D4DBC4AC260C39B600675A7B /* TestHardwareViewController.swift */,
 			);
 			path = PostureApp;
 			sourceTree = "<group>";
@@ -231,16 +267,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D44FA41E261128F800EB1050 /* TableViewCell.swift in Sources */,
 				D4F3EDAC25E4313F0004A595 /* TrackViewController.swift in Sources */,
 				D45F9F0C25ED4176006A8228 /* GoalsViewController.swift in Sources */,
-				D4DBC4AD260C39B600675A7B /* TestHardwareViewController.swift in Sources */,
+				D49EE2BD26178447005EE24B /* BluetoothViewController.swift in Sources */,
+				D44FA4162611208F00EB1050 /* ConsoleViewController.swift in Sources */,
 				D47E7DEC25E4120F00630807 /* ViewController.swift in Sources */,
+				D44FA41126111EBE00EB1050 /* BlePeripheral.swift in Sources */,
 				D4D8FC1D25EC75C800EEDD00 /* ActiveResultsViewController.swift in Sources */,
 				D4679C3825E4729F00DD5215 /* ActivityTableViewCell.swift in Sources */,
 				D47E7DE825E4120F00630807 /* AppDelegate.swift in Sources */,
 				D47E7DEA25E4120F00630807 /* SceneDelegate.swift in Sources */,
 				D48D2ABA25E84CBB00BC5582 /* ResultsViewController.swift in Sources */,
 				D45551EF26029363005BAFD0 /* SummaryViewController.swift in Sources */,
+				D44FA41226111EBE00EB1050 /* CBUUIDs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
