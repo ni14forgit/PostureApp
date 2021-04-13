@@ -9,7 +9,7 @@
 import UIKit
 import CoreBluetooth
 
-class BluetoothViewController: UIViewController {
+class BluetoothViewController: UIViewController,CBPeripheralDelegate {
     
     var start = false;
     
@@ -29,9 +29,29 @@ class BluetoothViewController: UIViewController {
     startScanning()
   }
     
-    func calculateP() {
-        
-    }
+//    func calculateROW(Ax: Double, Ay: Double, Az: Double) -> Double{
+//        var innerVal: Double;
+//        innerVal = Ax / sqrt(pow(Ay, 2) + pow(Az, 2));
+//        return atan(innerVal) * 180 / Double.pi;
+//    }
+//    
+//    func calculatePHI(Ax: Double, Ay: Double, Az: Double) -> Double{
+//        var innerVal: Double;
+//        innerVal = Ay / sqrt(pow(Ax, 2) + pow(Az, 2));
+//        return atan(innerVal) * 180 / Double.pi;
+//    }
+//    
+//    func calculateOMEGA(Ax: Double, Ay: Double, Az: Double) -> Double{
+//        var innerVal: Double;
+//        innerVal = sqrt(pow(Ax, 2) + pow(Ay, 2)) / Az;
+//        return atan(innerVal) * 180 / Double.pi;
+//    }
+    
+    
+    
+    
+    
+    
     
     @IBAction func writeValueToArduino(_ sender: Any) {
         
@@ -166,6 +186,103 @@ class BluetoothViewController: UIViewController {
               }
           }
       }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+
+      guard let services = peripheral.services else { return }
+      for service in services {
+        peripheral.discoverCharacteristics(nil, for: service)
+      }
+      BlePeripheral.connectedService = services[0]
+    }
+
+  func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+
+    guard let characteristics = service.characteristics else {
+        return
+    }
+
+    print("Found \(characteristics.count) characteristics.")
+
+    for characteristic in characteristics {
+
+      if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
+
+        rxCharacteristic = characteristic
+
+        BlePeripheral.connectedRXChar = rxCharacteristic
+
+        peripheral.setNotifyValue(true, for: rxCharacteristic!)
+        peripheral.readValue(for: characteristic)
+
+        print("RX Characteristic: \(rxCharacteristic.uuid)")
+      }
+
+      if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
+        txCharacteristic = characteristic
+        BlePeripheral.connectedTXChar = txCharacteristic
+        print("TX Characteristic: \(txCharacteristic.uuid)")
+      }
+    }
+    delayedConnection()
+ }
+
+
+
+  func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+
+    var characteristicASCIIValue = NSString()
+
+    guard characteristic == rxCharacteristic,
+
+          let characteristicValue = characteristic.value,
+          let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
+
+      characteristicASCIIValue = ASCIIstring
+    print("Value Recieved: \((characteristicASCIIValue as String))")
+    
+    
+    
+    
+    
+
+
+    let trimmedString = characteristicASCIIValue.trimmingCharacters(in: .whitespaces)
+    print(Double(trimmedString)!);
+    
+    NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+  }
+
+  func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+        peripheral.readRSSI()
+    }
+
+  func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+      guard error == nil else {
+          print("Error discovering services: error")
+          return
+      }
+    print("Function: \(#function),Line: \(#line)")
+      print("Message sent")
+  }
+
+
+  func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+      print("*******************************************************")
+    print("Function: \(#function),Line: \(#line)")
+      if (error != nil) {
+          print("Error changing notification state:\(String(describing: error?.localizedDescription))")
+
+      } else {
+          print("Characteristic's value subscribed")
+      }
+
+      if (characteristic.isNotifying) {
+          print ("Subscribed. Notification has begun for: \(characteristic.uuid)")
+      }
+  }
+    
+    
 }
     
     extension BluetoothViewController: CBCentralManagerDelegate {
@@ -237,99 +354,108 @@ class BluetoothViewController: UIViewController {
 
     // MARK: - CBPeripheralDelegate
     // A protocol that provides updates on the use of a peripheral’s services.
-    extension BluetoothViewController: CBPeripheralDelegate {
+//    extension BluetoothViewController: CBPeripheralDelegate {
+//
+//        func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+//
+//          guard let services = peripheral.services else { return }
+//          for service in services {
+//            peripheral.discoverCharacteristics(nil, for: service)
+//          }
+//          BlePeripheral.connectedService = services[0]
+//        }
+//
+//      func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+//
+//        guard let characteristics = service.characteristics else {
+//            return
+//        }
+//
+//        print("Found \(characteristics.count) characteristics.")
+//
+//        for characteristic in characteristics {
+//
+//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
+//
+//            rxCharacteristic = characteristic
+//
+//            BlePeripheral.connectedRXChar = rxCharacteristic
+//
+//            peripheral.setNotifyValue(true, for: rxCharacteristic!)
+//            peripheral.readValue(for: characteristic)
+//
+//            print("RX Characteristic: \(rxCharacteristic.uuid)")
+//          }
+//
+//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
+//            txCharacteristic = characteristic
+//            BlePeripheral.connectedTXChar = txCharacteristic
+//            print("TX Characteristic: \(txCharacteristic.uuid)")
+//          }
+//        }
+//        delayedConnection()
+//     }
+//
+//
+//
+//      func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+//
+//        var characteristicASCIIValue = NSString()
+//
+//        guard characteristic == rxCharacteristic,
+//
+//              let characteristicValue = characteristic.value,
+//              let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
+//
+//          characteristicASCIIValue = ASCIIstring
+//        print("Value Recieved: \((characteristicASCIIValue as String))")
+//
+//
+//
+//
+//
+//
+//
+//        let trimmedString = characteristicASCIIValue.trimmingCharacters(in: .whitespaces)
+//        print(Double(trimmedString)!);
+//
+//        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+//      }
+//
+//      func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+//            peripheral.readRSSI()
+//        }
+//
+//      func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+//          guard error == nil else {
+//              print("Error discovering services: error")
+//              return
+//          }
+//        print("Function: \(#function),Line: \(#line)")
+//          print("Message sent")
+//      }
+//
+//
+//      func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+//          print("*******************************************************")
+//        print("Function: \(#function),Line: \(#line)")
+//          if (error != nil) {
+//              print("Error changing notification state:\(String(describing: error?.localizedDescription))")
+//
+//          } else {
+//              print("Characteristic's value subscribed")
+//          }
+//
+//          if (characteristic.isNotifying) {
+//              print ("Subscribed. Notification has begun for: \(characteristic.uuid)")
+//          }
+//      }
+//    }
 
-        func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-
-          guard let services = peripheral.services else { return }
-          for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
-          }
-          BlePeripheral.connectedService = services[0]
-        }
-
-      func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-
-        guard let characteristics = service.characteristics else {
-            return
-        }
-
-        print("Found \(characteristics.count) characteristics.")
-
-        for characteristic in characteristics {
-
-          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
-
-            rxCharacteristic = characteristic
-
-            BlePeripheral.connectedRXChar = rxCharacteristic
-
-            peripheral.setNotifyValue(true, for: rxCharacteristic!)
-            peripheral.readValue(for: characteristic)
-
-            print("RX Characteristic: \(rxCharacteristic.uuid)")
-          }
-
-          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
-            txCharacteristic = characteristic
-            BlePeripheral.connectedTXChar = txCharacteristic
-            print("TX Characteristic: \(txCharacteristic.uuid)")
-          }
-        }
-        delayedConnection()
-     }
-
-
-
-      func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-
-        var characteristicASCIIValue = NSString()
-
-        guard characteristic == rxCharacteristic,
-
-              let characteristicValue = characteristic.value,
-              let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
-
-          characteristicASCIIValue = ASCIIstring
-
-        print("Value Recieved: \((characteristicASCIIValue as String))")
-
-        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
-      }
-
-      func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-            peripheral.readRSSI()
-        }
-
-      func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-          guard error == nil else {
-              print("Error discovering services: error")
-              return
-          }
-        print("Function: \(#function),Line: \(#line)")
-          print("Message sent")
-      }
-
-
-      func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-          print("*******************************************************")
-        print("Function: \(#function),Line: \(#line)")
-          if (error != nil) {
-              print("Error changing notification state:\(String(describing: error?.localizedDescription))")
-
-          } else {
-              print("Characteristic's value subscribed")
-          }
-
-          if (characteristic.isNotifying) {
-              print ("Subscribed. Notification has begun for: \(characteristic.uuid)")
-          }
-      }
-
-    }
+    
 
     // MARK: - UITableViewDataSource
-    // The methods adopted by the object you use to manage data and provide cells for a table view.
+// The methods adopted bythe object you use to manage data and provide cells for a table view.
     extension BluetoothViewController: UITableViewDataSource {
 
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

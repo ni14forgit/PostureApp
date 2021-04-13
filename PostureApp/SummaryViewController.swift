@@ -8,15 +8,105 @@
 
 import UIKit
 import Charts
+import RealmSwift
 
 class SummaryViewController: UIViewController, ChartViewDelegate {
     
     var scatterChart = ScatterChartView()
+//    let realm = try! Realm()
+    
+//    var setOfPastSevenDays = Set<String>()
+    var hashMapOfPastSevenDays = [String : Int]()
+    var collectedMeasurements = [[Int]]()
+    var finalMeasurements = [Double]()
+    var lastSevenDaysFormatter = [String]()
+    
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
         scatterChart.delegate = self
+        
+        for _ in 0...6 {
+            collectedMeasurements.append([])
+        }
+        
+        
+        
+        let realm = try! Realm()
+        let str  = "yyyy-MM-dd HH:mm:ss"
+//        let monthDayOnlyRange = desc.startIndex.advancedBy(5)..<desc.startIndex.advancedBy(10)
+        let start = str.index(str.startIndex, offsetBy: 5)
+        let end = str.index(str.endIndex, offsetBy: -9)
+        let range = start..<end
+        
+        print("hello")
+        
+        let todayDate = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        
+        for index in 0...6 {
+//            someSet.insert("c")
+            let modifiedDate = Calendar.current.date(byAdding: .day, value: -index, to: todayDate)!
+            let finalformattedDate = formatter.string(from: modifiedDate)
+            hashMapOfPastSevenDays[String(finalformattedDate.prefix(10))] = 6 - index;
+            let newStr = String(finalformattedDate[range]);
+            lastSevenDaysFormatter.append(newStr)
+        }
+        
+        print(hashMapOfPastSevenDays)
+        
+        lastSevenDaysFormatter.reverse()
+        
+        let results = realm.objects(MeasurementTwo.self)
+        
+        print("about to nav result")
+
+        for result in results {
+            print("results??")
+            print(result.timestamp)
+            print(String(result.timestamp[range]))
+            if hashMapOfPastSevenDays[String(result.timestamp.prefix(10))] != nil {
+                print("match!!")
+                print(hashMapOfPastSevenDays[result.timestamp])
+                print("\n")
+                collectedMeasurements[hashMapOfPastSevenDays[String(result.timestamp.prefix(10))] ?? 0].append(result.measurement)
+            }
+        }
+        
+        print("collectedmeasurements")
+        print(collectedMeasurements)
+        
+        var counter = 0;
+        for measurement in collectedMeasurements {
+            
+            
+            if (measurement.count == 0) {
+                
+                
+                print(counter)
+                
+                lastSevenDaysFormatter.remove(at: counter)
+                
+            } else {
+                
+                let sumArray = measurement.reduce(0, +)
+                let avgArrayValue = Double(sumArray / measurement.count)
+                finalMeasurements.append(avgArrayValue);
+                counter += 1;
+            }
+            
+        }
+        print("final measurements")
+        print(finalMeasurements)
+        
+//        ITERATE THROUGH REALM MEASUREMENTS
+        
+        
+        
 
         // Do any additional setup after loading the view.
     }
@@ -31,8 +121,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         view.addSubview(scatterChart)
         var entries = [ChartDataEntry]()
         
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"]
-            scatterChart.xAxis.valueFormatter = IndexAxisValueFormatter(values:months)
+        
+            scatterChart.xAxis.valueFormatter = IndexAxisValueFormatter(values:lastSevenDaysFormatter)
         scatterChart.xAxis.granularity = 1
         scatterChart.xAxis.labelCount = 7
         scatterChart.xAxis.drawAxisLineEnabled = false
@@ -46,10 +136,10 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         scatterChart.legend.enabled = false
         
         var circleColors: [NSUIColor] = []
-        let tempData = [1,-3,-4,3,2,4,5,-2,0,-1]
+        let tempData = finalMeasurements
         // arrays with circle color definitions
 
-        for i in 0..<10 {
+        for i in 0..<tempData.count {
 //            let red   = Double(arc4random_uniform(256))
 //            let green = Double(arc4random_uniform(256))
 //            let blue  = Double(arc4random_uniform(256))
@@ -76,7 +166,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
 //        scatterChart.yAxis.drawAxisLineEnabled = false
        
         
-        for x in 0..<10{
+        for x in 0..<tempData.count{
             entries.append(ChartDataEntry(x: Double(x), y:Double(tempData[x])))
         }
         
