@@ -14,6 +14,10 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     var start = false;
     
+    var minutes = 1;
+    
+    var activity: String?
+    
     private var centralManager: CBCentralManager!
     private var bluefruitPeripheral: CBPeripheral!
     private var txCharacteristic: CBCharacteristic!
@@ -51,24 +55,6 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        leftArrows?.image = UIImage(named: leftImage)
-//        rightArrows?.image = UIImage(named: rightImage)
-        
-//        let date = Date()
-//        let format = DateFormatter()
-//        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let formattedDate = format.string(from: date)
-//        print(formattedDate)
-//
-//        let measurement = MeasurementTwo()
-//        measurement.timestamp = formattedDate
-//        measurement.measurement = 5;
-//        realm.beginWrite()
-//        realm.add(measurement)
-//        try! realm.commitWrite()
-        
-        
-        
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
         startScanning();
@@ -78,16 +64,43 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        
+        
+        databaseTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         databaseTimer?.invalidate()
+        
+        
+        let date = Date()
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let formattedDate = format.string(from: date)
+        print(formattedDate)
+        let numminutes = NumMinutes()
+        numminutes.timestamp = formattedDate
+        numminutes.minutes = minutes;
+        realm.beginWrite()
+        realm.add(numminutes)
+        try! realm.commitWrite()
+        print("VIEW WILL DISAPPERA")
+        
+        print(minutes)
+        
+        minutes = 1;
     }
 
     
     
-    func retrieve() {
-        let pastMeasurements = realm.objects(MeasurementTwo.self)
-    }
+//    func retrieve() {
+//        let pastMeasurements = realm.objects(MeasurementTwo.self)
+//    }
     
     @objc func appendRxDataToTextView(notification: Notification) -> Void{
 //      consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
@@ -152,7 +165,6 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         format.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let formattedDate = format.string(from: date)
         print(formattedDate)
-        
         let measurement = MeasurementTwo()
         measurement.timestamp = formattedDate
         measurement.measurement = 5;
@@ -160,6 +172,11 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         realm.add(measurement)
         try! realm.commitWrite()
         print("write")
+        
+        
+        // update minutes
+        minutes += 1;
+        print(minutes)
         
     }
 
@@ -175,7 +192,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
             self.stopScanning()
         }
         
-        databaseTimer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        
     }
     
     func stopTimer() -> Void {
@@ -447,10 +464,17 @@ class MeasurementTwo: Object {
     @objc dynamic var timestamp = ""
 }
 
-class PostureMeasurementOne: Object {
-    
-    @objc dynamic var measurement = 0
+class NumMinutes: Object {
+    @objc dynamic var minutes = 0
     @objc dynamic var timestamp = ""
 }
+
+
+
+//class PostureMeasurementOne: Object {
+//
+//    @objc dynamic var measurement = 0
+//    @objc dynamic var timestamp = ""
+//}
 
 

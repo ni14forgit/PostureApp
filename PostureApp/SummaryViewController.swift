@@ -13,6 +13,10 @@ import RealmSwift
 class SummaryViewController: UIViewController, ChartViewDelegate {
     
     var scatterChart = ScatterChartView()
+    
+    var activity: String?
+    
+    @IBOutlet weak var titlePage: UILabel?
 //    let realm = try! Realm()
     
 //    var setOfPastSevenDays = Set<String>()
@@ -21,10 +25,16 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     var finalMeasurements = [Double]()
     var lastSevenDaysFormatter = [String]()
     
+    let errorRangeForSitting = [1,3]
+    let errorRangeForStanding = [1,3]
+    let errorRangeForSquatting = [1,3]
+    var errorRange = [Int]()
     
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        titlePage?.text = activity;
         print(Realm.Configuration.defaultConfiguration.fileURL!)
         scatterChart.delegate = self
         
@@ -102,11 +112,20 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         }
         print("final measurements")
         print(finalMeasurements)
+    
         
-//        ITERATE THROUGH REALM MEASUREMENTS
-        
-        
-        
+        if activity == "Sitting" {
+            print("sitting")
+            errorRange=errorRangeForSitting
+        } else if activity == "Standing" {
+            print("Standing")
+            errorRange=errorRangeForStanding
+        } else if activity == "Squatting" {
+            print("Squatting")
+            errorRange=errorRangeForSquatting
+        } else {
+            print("did not work")
+        }
 
         // Do any additional setup after loading the view.
     }
@@ -154,9 +173,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
 //            227, 32, 71
 //            let color = UIColor(red: CGFloat(red/255), green: CGFloat(green/255), blue: CGFloat(blue/255), alpha: 1)
             
-            if (abs(tempData[i]) <= 1) {
+            if (abs(tempData[i]) <= Double(errorRange[0])) {
                 circleColors.append(blue)
-            } else if (abs(tempData[i]) <= 2) {
+            } else if (abs(tempData[i]) <= Double(errorRange[0])) {
                 circleColors.append(light_red)
             } else {
                 circleColors.append(red)

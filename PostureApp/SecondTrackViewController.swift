@@ -17,7 +17,7 @@ import UIKit
 //    }
 //}
 
-class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SecondTrackViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
    
     @IBOutlet weak var table: UITableView!
@@ -57,11 +57,11 @@ class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let vc = ResultsViewController()
 //        navigationController?.pushViewController(vc, animated: true)
-        performSegue(withIdentifier:"showAngleResults" , sender: self)
+        performSegue(withIdentifier:"showSummaryResults" , sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? ResultsViewController {
+        if let destination = segue.destination as? SummaryViewController {
             destination.activity = products[(table.indexPathForSelectedRow?.row)!]
         }
     }
