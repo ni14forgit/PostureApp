@@ -13,13 +13,19 @@ import CoreBluetooth
 class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     var start = false;
-    
+    var singlePeripheralSet = false;
     var minutes = 1;
-    
     var activity: String?
+    
+    let LEG_PERIPHERAL_IDENTIFIER = "3FC529DC-8810-8548-B602-50EA21FBCA5B"
+    let BACK_PERIPHERAL_IDENTIFIER = "73D2E184-726D-E51C-0300-8DA18D844DC5"
     
     private var centralManager: CBCentralManager!
     private var bluefruitPeripheral: CBPeripheral!
+    
+    private var bluefruitPeripheralBack: CBPeripheral!
+    private var bluefruitPeripheralLeg: CBPeripheral!
+    
     private var txCharacteristic: CBCharacteristic!
     private var rxCharacteristic: CBCharacteristic!
     private var peripheralArray: [CBPeripheral] = []
@@ -52,49 +58,68 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
       }
     
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
         startScanning();
         
+//        if (!start) {
+//            writeOutgoingValue(data: "start")
+//            start = true;
+//        } else {
+//            writeOutgoingValue(data: "stop")
+//            start = false;
+//        }
+        
+        writeOutgoingValue(data: "start")
+        
         keyboardNotifications()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+//        centralManager = CBCentralManager(delegate: self, queue: nil)
+//        startScanning();
+        
+        if (!start) {
+            writeOutgoingValue(data: "start")
+            start = true;
+        } else {
+            writeOutgoingValue(data: "stop")
+            start = false;
+        }
         
         
         databaseTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        databaseTimer?.invalidate()
-        
-        
-        let date = Date()
-        let format = DateFormatter()
-        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let formattedDate = format.string(from: date)
-        print(formattedDate)
-        let numminutes = NumMinutes()
-        numminutes.timestamp = formattedDate
-        numminutes.minutes = minutes;
-        realm.beginWrite()
-        realm.add(numminutes)
-        try! realm.commitWrite()
-        print("VIEW WILL DISAPPERA")
-        
-        print(minutes)
-        
-        minutes = 1;
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        databaseTimer?.invalidate()
+//
+//
+//        let date = Date()
+//        let format = DateFormatter()
+//        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        let formattedDate = format.string(from: date)
+//        print(formattedDate)
+//        let numminutes = NumMinutes()
+//        numminutes.timestamp = formattedDate
+//        numminutes.minutes = minutes;
+//        realm.beginWrite()
+//        realm.add(numminutes)
+//        try! realm.commitWrite()
+//        print("VIEW WILL DISAPPERA")
+//
+//        print(minutes)
+//
+//        minutes = 1;
+//    }
 
     
     
@@ -151,6 +176,24 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         centralManager?.cancelPeripheralConnection(bluefruitPeripheral!)
       }
   }
+    
+    func disconnectFromLegConnectToBack() -> Void {
+      if bluefruitPeripheral != nil {
+        centralManager?.cancelPeripheralConnection(bluefruitPeripheral!)
+      }
+        bluefruitPeripheral = bluefruitPeripheralBack
+      centralManager?.connect(bluefruitPeripheral!, options: nil)
+  }
+    
+    func disconnectFromBackConnectToLeg() -> Void {
+      if bluefruitPeripheral != nil {
+        centralManager?.cancelPeripheralConnection(bluefruitPeripheral!)
+      }
+        bluefruitPeripheral = bluefruitPeripheralLeg
+      centralManager?.connect(bluefruitPeripheral!, options: nil)
+  }
+    
+    
 
     func removeArrayData() -> Void {
       centralManager.cancelPeripheralConnection(bluefruitPeripheral)
@@ -191,8 +234,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
         }
-        
-        
+
     }
     
     func stopTimer() -> Void {
@@ -282,6 +324,14 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
     var characteristicASCIIValue = NSString()
+    
+    if(peripheral.identifier.uuidString == LEG_PERIPHERAL_IDENTIFIER){
+        print("LEG value updated!")
+    } else if (peripheral.identifier.uuidString == BACK_PERIPHERAL_IDENTIFIER) {
+        print("BACK value updated!")
+    }
+   
+    
 
     guard characteristic == rxCharacteristic,
 
@@ -290,36 +340,6 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 
       characteristicASCIIValue = ASCIIstring
     print("Value Recieved: \((characteristicASCIIValue as String))")
-    
-    
-    
-    
-    
-//        let array = characteristicASCIIValue.components(separatedBy: ",")
-    
-//        if array.count == 3 {
-//        var NumberArray = [Double]();
-//        var valsToReturn = [Double]();
-//        for val in array {
-//            NumberArray.append(Double(val) ?? 0.0);
-//        }
-//
-//        print(NumberArray)
-//
-//
-//        let Ax = NumberArray[0];
-//        let Ay = NumberArray[1];
-//        let Az = NumberArray[2];
-//
-//        valsToReturn.append(calculateROW(Ax: Ax, Ay: Ay, Az: Az));
-//        valsToReturn.append(calculatePHI(Ax: Ax, Ay: Ay, Az: Az));
-//        valsToReturn.append(calculateOMEGA(Ax: Ax, Ay: Ay, Az: Az));
-//
-//        print(valsToReturn);
-//
-//        }
-    
-//        print(Double(characteristicASCIIValue) ?? 0.0)
     
     let trimmedString = characteristicASCIIValue.trimmingCharacters(in: .whitespaces)
 //    print(Double(trimmedString)!);
@@ -401,8 +421,18 @@ extension ActiveResultsViewController: CBCentralManagerDelegate {
       print("Function: \(#function),Line: \(#line)")
         
         
-    print("setting bluefruit Peripheral")
+      print("setting bluefruit Peripheral")
       bluefruitPeripheral = peripheral
+        
+        print(peripheral.identifier.uuidString)
+        if (peripheral.identifier.uuidString == LEG_PERIPHERAL_IDENTIFIER){
+            print("LEG connected")
+            bluefruitPeripheralLeg = peripheral
+        } else {
+            print("BACK connected")
+            bluefruitPeripheralBack = peripheral
+        }
+        
 
       if peripheralArray.contains(peripheral) {
           print("Duplicate Found.")
@@ -463,6 +493,14 @@ class MeasurementTwo: Object {
     @objc dynamic var measurement = 0
     @objc dynamic var timestamp = ""
 }
+
+class FinalPostureMeasurement: Object {
+    
+    @objc dynamic var measurement = 0
+    @objc dynamic var timestamp = ""
+    @objc dynamic var activity = ""
+}
+
 
 class NumMinutes: Object {
     @objc dynamic var minutes = 0

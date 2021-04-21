@@ -32,6 +32,8 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
     
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titlePage?.text = activity;
@@ -72,6 +74,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         lastSevenDaysFormatter.reverse()
         
         let results = realm.objects(MeasurementTwo.self)
+//        let results = realm.objects(MeasurementTwo.self)
         
         print("about to nav result")
 
@@ -83,6 +86,9 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
                 print("match!!")
                 print(hashMapOfPastSevenDays[result.timestamp])
                 print("\n")
+                
+                // ADD IF STATEMENT HERE ABOUT TYPE OF ACTIVITY
+                
                 collectedMeasurements[hashMapOfPastSevenDays[String(result.timestamp.prefix(10))] ?? 0].append(result.measurement)
             }
         }

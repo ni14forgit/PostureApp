@@ -172,16 +172,16 @@ class BluetoothViewController: UIViewController,CBPeripheralDelegate {
   }
     
     func writeOutgoingValue(data: String){
-        
+
         print("sending value to Arduino \n")
         print("sending value to Arduino \n")
-          
+
         let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-        
+
         if let bluefruitPeripheral = bluefruitPeripheral {
-              
+
           if let txCharacteristic = txCharacteristic {
-                  
+
             bluefruitPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
               }
           }
