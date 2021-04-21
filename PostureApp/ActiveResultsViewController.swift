@@ -13,9 +13,21 @@ import CoreBluetooth
 class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     var start = false;
-    var singlePeripheralSet = false;
+//    var singlePeripheralSet = false;
     var minutes = 1;
     var activity: String?
+    var isLeg = true;
+    
+    
+    let OPTIMAL_SITTING_VALUE = 90
+    let OPTIMAL_STANDING_VALUE = 90
+    let OPTIMAL_SQUATTING_VALUE = 90
+    let ERROR_RANGE = 3
+    
+    
+    
+    
+  
     
     let LEG_PERIPHERAL_IDENTIFIER = "3FC529DC-8810-8548-B602-50EA21FBCA5B"
     let BACK_PERIPHERAL_IDENTIFIER = "73D2E184-726D-E51C-0300-8DA18D844DC5"
@@ -32,6 +44,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     private var rssiArray = [NSNumber]()
     private var timer = Timer()
     var databaseTimer: Timer?
+    var switchTimer: Timer?
     
     
     @IBOutlet weak var LegImage: UIImageView?
@@ -43,7 +56,15 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     let realm = try! Realm()
     
     @IBAction func scanningAction(_ sender: Any) {
+        if (!start) {
+            writeOutgoingValue(data: "start")
+            start = true;
+        } else {
+            writeOutgoingValue(data: "stop")
+            start = false;
+        }
     startScanning()
+        
     }
     
     @IBAction func writeValueToArduino(_ sender: Any) {
@@ -62,7 +83,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         super.viewDidLoad()
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        startScanning();
+//        startScanning();
         
 //        if (!start) {
 //            writeOutgoingValue(data: "start")
@@ -72,7 +93,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 //            start = false;
 //        }
         
-        writeOutgoingValue(data: "start")
+//        writeOutgoingValue(data: "start")
         
         keyboardNotifications()
 
@@ -85,16 +106,18 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 //        centralManager = CBCentralManager(delegate: self, queue: nil)
 //        startScanning();
         
-        if (!start) {
-            writeOutgoingValue(data: "start")
-            start = true;
-        } else {
-            writeOutgoingValue(data: "stop")
-            start = false;
-        }
+//        if (!start) {
+//            writeOutgoingValue(data: "start")
+//            start = true;
+//        } else {
+//            writeOutgoingValue(data: "stop")
+//            start = false;
+//        }
         
         
         databaseTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        
+        switchTimer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(runSwitchBluetoothCode), userInfo: nil, repeats: true)
         
     }
     
@@ -203,24 +226,62 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     @objc func runTimedCode() {
         
-        let date = Date()
-        let format = DateFormatter()
-        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let formattedDate = format.string(from: date)
-        print(formattedDate)
-        let measurement = MeasurementTwo()
-        measurement.timestamp = formattedDate
-        measurement.measurement = 5;
-        realm.beginWrite()
-        realm.add(measurement)
-        try! realm.commitWrite()
-        print("write")
-        
+//        let date = Date()
+//        let format = DateFormatter()
+//        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        let formattedDate = format.string(from: date)
+//        print(formattedDate)
+//        let measurement = MeasurementTwo()
+//        measurement.timestamp = formattedDate
+//        measurement.measurement = 5;
+//        realm.beginWrite()
+//        realm.add(measurement)
+//        try! realm.commitWrite()
+//        print("write")
+//
         
         // update minutes
-        minutes += 1;
-        print(minutes)
+//        minutes += 1;
+//        print(minutes)
         
+    }
+    
+    @objc func runSwitchBluetoothCode() {
+        
+//        startScanning()
+        if (!start) {
+            writeOutgoingValue(data: "start")
+            start = true;
+        } else {
+            writeOutgoingValue(data: "stop")
+            start = false;
+        }
+        
+        if bluefruitPeripheral.identifier.uuidString == LEG_PERIPHERAL_IDENTIFIER {
+            if let bluefruitPeripheralBack = bluefruitPeripheralBack {
+                print("calling connecting to back")
+                disconnectFromLegConnectToBack()
+                writeOutgoingValue(data: "start")
+                isLeg = false;
+            }
+            
+        } else if bluefruitPeripheral.identifier.uuidString == BACK_PERIPHERAL_IDENTIFIER {
+            if let bluefruitPeripheralLeg = bluefruitPeripheralLeg {
+                print("calling connecting to leg")
+                disconnectFromBackConnectToLeg()
+                writeOutgoingValue(data: "start")
+                isLeg = true;
+            }
+        }
+        
+        if (!start) {
+            writeOutgoingValue(data: "start")
+            start = true;
+        } else {
+            writeOutgoingValue(data: "stop")
+            start = false;
+        }
+            
     }
 
     func startScanning() -> Void {
@@ -234,7 +295,6 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
             self.stopScanning()
         }
-
     }
     
     func stopTimer() -> Void {
@@ -259,13 +319,12 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 
       let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
 
-      self.navigationController?.pushViewController(detailViewController, animated: true)
+//      self.navigationController?.pushViewController(detailViewController, animated: true)
     })
   }
     
     func writeOutgoingValue(data: String){
         
-        print("sending value to Arduino \n")
         print("sending value to Arduino \n")
           
         let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
@@ -343,7 +402,11 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     let trimmedString = characteristicASCIIValue.trimmingCharacters(in: .whitespaces)
 //    print(Double(trimmedString)!);
-    LegValue?.text = trimmedString;
+    if (isLeg) {
+        LegValue?.text = trimmedString;
+    } else {
+        BackValue?.text = trimmedString;
+    }
     
     NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
   }
