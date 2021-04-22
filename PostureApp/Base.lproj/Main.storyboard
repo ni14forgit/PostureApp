@@ -553,13 +553,18 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L9I-u0-0M5">
-                                <rect key="frame" x="154" y="604" width="46" height="30"/>
+                                <rect key="frame" x="26" y="419" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="scanningAction:" destination="0y0-Qd-spa" eventType="touchUpInside" id="Sre-l9-ZrV"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oxW-jV-0Oy">
+                                <rect key="frame" x="82" y="547" width="250" height="250"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="JXU-EZ-XVS"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -578,6 +583,7 @@
                         <outlet property="BackValue" destination="1Uq-Ga-pDx" id="Jst-Ma-I0n"/>
                         <outlet property="LegImage" destination="ZLA-Zx-81c" id="UW0-gH-Eo2"/>
                         <outlet property="LegValue" destination="qeq-MR-zZh" id="6Uw-ck-bjz"/>
+                        <outlet property="cartPlane" destination="oxW-jV-0Oy" id="SCP-SN-CbX"/>
                         <outlet property="reccommendationValue" destination="4bD-0h-xbu" id="DDI-Nz-6Zj"/>
                     </connections>
                 </viewController>

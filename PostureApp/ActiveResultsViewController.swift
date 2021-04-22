@@ -18,16 +18,16 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     var activity: String?
     var isLeg = true;
     
+    var backPath: UIBezierPath?
+    var legPath: UIBezierPath?
+    
+    var currentLegValue = 0;
+    var currentBackValue = 0;
     
     let OPTIMAL_SITTING_VALUE = 90
     let OPTIMAL_STANDING_VALUE = 90
     let OPTIMAL_SQUATTING_VALUE = 90
     let ERROR_RANGE = 3
-    
-    
-    
-    
-  
     
     let LEG_PERIPHERAL_IDENTIFIER = "3FC529DC-8810-8548-B602-50EA21FBCA5B"
     let BACK_PERIPHERAL_IDENTIFIER = "73D2E184-726D-E51C-0300-8DA18D844DC5"
@@ -46,6 +46,10 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     var databaseTimer: Timer?
     var switchTimer: Timer?
     
+    var publicLineLength = 0.0
+    
+    @IBOutlet weak var cartPlane: UIView!
+    
     
     @IBOutlet weak var LegImage: UIImageView?
     @IBOutlet weak var BackImage: UIImageView?
@@ -56,14 +60,10 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     let realm = try! Realm()
     
     @IBAction func scanningAction(_ sender: Any) {
-        if (!start) {
-            writeOutgoingValue(data: "start")
-            start = true;
-        } else {
-            writeOutgoingValue(data: "stop")
-            start = false;
-        }
-    startScanning()
+
+    print("button clicked")
+    writeOutgoingValue(data: "start")
+//    startScanning()
         
     }
     
@@ -78,27 +78,98 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         }
       }
     
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
-//        startScanning();
         
-//        if (!start) {
-//            writeOutgoingValue(data: "start")
-//            start = true;
-//        } else {
-//            writeOutgoingValue(data: "stop")
-//            start = false;
-//        }
+        // MAYBE DO SOME IF STATEMENT HERE TO ONLY CALL START IF NOT (BOTH DEVICES DISCOVERED)
+        startScanning();
         
-//        writeOutgoingValue(data: "start")
         
         keyboardNotifications()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
+        
+        
+        
+        // GRAPH SHOWING CODE
+        
+        let width = cartPlane.frame.size.width;
+              let height = cartPlane.frame.size.height;
+              let lineLength = (height/2)*(3/4);
+        
+//        publicHeight = height;
+//        publicLineLength = lineLength
+              
+//               y-axis
+              drawLineFromPointToPoint(startX: Int(width/2), toEndingX: Int(width/2), startingY: 0, toEndingY: Int(height), ofColor: UIColor.white, widthOfLine: 1.0, inView: cartPlane, alter: false)
+              // x-axis
+              drawLineFromPointToPoint(startX: 0, toEndingX: Int(width), startingY: Int(height/2), toEndingY: Int(height/2), ofColor: UIColor.white, widthOfLine: 1.0, inView: cartPlane, alter: false)
+//              // 45 degree angle
+              let x45 = lineLength*cos(45*3.14/180);
+              let y45 = lineLength*sin(45*3.14/180);
+              drawLineFromPointToPoint(startX: 0, toEndingX: Int(x45), startingY: 0, toEndingY: Int(y45), ofColor: UIColor.blue, widthOfLine: 5.0, inView: cartPlane)
+              // 45 degree angle
+              let x90 = lineLength*cos(90*3.14/180);
+              let y90 = lineLength*sin(90*3.14/180);
+              print(x90, y90)
+              drawLineFromPointToPoint(startX: 0, toEndingX: Int(x90), startingY: 0, toEndingY: Int(y90), ofColor: UIColor.blue, widthOfLine: 5.0, inView: cartPlane)
+
+              cartPlane.backgroundColor = UIColor.lightGray
+              cartPlane.layer.cornerRadius = 10;
+              cartPlane.layer.masksToBounds = true;
+              self.view.addSubview(cartPlane)
+
     }
+    
+//    func drawLine(degree: Double, lineLength: Double, ofColor lineColor: UIColor = UIColor.blue, widthofLine lineWidth: CGFloat = 5.0, inView view: UIView) {
+//            let x = lineLength*cos(degree*3.14/180);
+//            let y = lineLength*sin(degree*3.14/180);
+//            drawLineFromPointToPoint(startX: 0, toEndingX: Int(x), startingY: 0, toEndingY: Int(y), ofColor: lineColor, widthOfLine: lineWidth, inView: view);
+//    }
+    
+    func drawLine(degree: Double, ofColor lineColor: UIColor = UIColor.blue, widthofLine lineWidth: CGFloat = 5.0, inView view: UIView, path: UIBezierPath? = nil) {
+            let lineLength = Double((view.frame.height/2)*(3/4));
+            let x = lineLength*cos(degree*3.14/180);
+            let y = lineLength*sin(degree*3.14/180);
+        drawLineFromPointToPoint(startX: 0, toEndingX: Int(x), startingY: 0, toEndingY: Int(y), ofColor: lineColor, widthOfLine: lineWidth, inView: view, path: path);
+        }
+    
+    
+    func drawLineFromPointToPoint(startX: Int, toEndingX endX: Int, startingY startY: Int, toEndingY endY: Int, ofColor lineColor: UIColor, widthOfLine lineWidth: CGFloat, inView view: UIView, alter: Bool = true, path: UIBezierPath? = nil) {
+           
+           let viewWidth = view.frame.size.width;
+           let viewHeight = view.frame.size.height;
+           let newStartX = alter ? Int(viewWidth)/2-startX : startX;
+           let newEndX = alter ? Int(viewWidth)/2+endX : endX;
+           let newStartY = alter ? Int(viewHeight)/2-startY : startY;
+           let newEndY = alter ? Int(viewWidth)/2-endY : endY;
+           
+           print(newStartX, "\n");
+           print(newEndX, "\n");
+           print(newStartY, "\n");
+           print(newEndY, "\n");
+        
+        
+//           path = nil
+            
+           path?.move(to: CGPoint(x: newStartX, y: newStartY))
+           path?.addLine(to: CGPoint(x: newEndX, y: newEndY))
+           
+
+           let shapeLayer = CAShapeLayer()
+           shapeLayer.path = path?.cgPath
+           shapeLayer.strokeColor = lineColor.cgColor
+           shapeLayer.lineWidth = lineWidth
+
+           view.layer.addSublayer(shapeLayer)
+
+       }
+
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -115,34 +186,13 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 //        }
         
         
-        databaseTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+//        databaseTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
         
-        switchTimer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(runSwitchBluetoothCode), userInfo: nil, repeats: true)
+        switchTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(runSwitchBluetoothCode), userInfo: nil, repeats: true)
         
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        databaseTimer?.invalidate()
-//
-//
-//        let date = Date()
-//        let format = DateFormatter()
-//        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let formattedDate = format.string(from: date)
-//        print(formattedDate)
-//        let numminutes = NumMinutes()
-//        numminutes.timestamp = formattedDate
-//        numminutes.minutes = minutes;
-//        realm.beginWrite()
-//        realm.add(numminutes)
-//        try! realm.commitWrite()
-//        print("VIEW WILL DISAPPERA")
-//
-//        print(minutes)
-//
-//        minutes = 1;
-//    }
+
 
     
     
@@ -206,6 +256,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
       }
         bluefruitPeripheral = bluefruitPeripheralBack
       centralManager?.connect(bluefruitPeripheral!, options: nil)
+        
   }
     
     func disconnectFromBackConnectToLeg() -> Void {
@@ -215,8 +266,6 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
         bluefruitPeripheral = bluefruitPeripheralLeg
       centralManager?.connect(bluefruitPeripheral!, options: nil)
   }
-    
-    
 
     func removeArrayData() -> Void {
       centralManager.cancelPeripheralConnection(bluefruitPeripheral)
@@ -226,61 +275,78 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     
     @objc func runTimedCode() {
         
-//        let date = Date()
-//        let format = DateFormatter()
-//        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        let formattedDate = format.string(from: date)
-//        print(formattedDate)
+        let date = Date()
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let formattedDate = format.string(from: date)
+        print(formattedDate)
 //        let measurement = MeasurementTwo()
 //        measurement.timestamp = formattedDate
 //        measurement.measurement = 5;
+        
+//        let finalPostureMeasurement = FinalPostureMeasurement()
+//        finalPostureMeasurement.timestamp = formattedDate
+//        finalPostureMeasurement.measurement = currentLegValue;
+//        finalPostureMeasurement.activity = activity!;
+//
+//
 //        realm.beginWrite()
-//        realm.add(measurement)
+////        realm.add(measurement)
+//        realm.add(finalPostureMeasurement)
 //        try! realm.commitWrite()
 //        print("write")
-//
+
         
-        // update minutes
-//        minutes += 1;
-//        print(minutes)
+//         update minutes
+        minutes += 1;
+        print(minutes)
         
     }
     
     @objc func runSwitchBluetoothCode() {
         
-//        startScanning()
+        startScanning()
         if (!start) {
             writeOutgoingValue(data: "start")
             start = true;
-        } else {
-            writeOutgoingValue(data: "stop")
-            start = false;
         }
+        
+//        else {
+//            writeOutgoingValue(data: "stop")
+//            start = false;
+//        }
+        
+        print("switchBluetooth was called")
         
         if bluefruitPeripheral.identifier.uuidString == LEG_PERIPHERAL_IDENTIFIER {
             if let bluefruitPeripheralBack = bluefruitPeripheralBack {
                 print("calling connecting to back")
                 disconnectFromLegConnectToBack()
-                writeOutgoingValue(data: "start")
+//                writeOutgoingValue(data: "start")
                 isLeg = false;
             }
             
         } else if bluefruitPeripheral.identifier.uuidString == BACK_PERIPHERAL_IDENTIFIER {
+            print("reached here")
             if let bluefruitPeripheralLeg = bluefruitPeripheralLeg {
                 print("calling connecting to leg")
                 disconnectFromBackConnectToLeg()
-                writeOutgoingValue(data: "start")
+//                writeOutgoingValue(data: "start")
                 isLeg = true;
             }
         }
         
-        if (!start) {
-            writeOutgoingValue(data: "start")
-            start = true;
-        } else {
-            writeOutgoingValue(data: "stop")
-            start = false;
-        }
+//        if (!start) {
+//            writeOutgoingValue(data: "start")
+//            start = true;
+//        }
+        
+//        writeOutgoingValue(data: "start")
+        
+//        else {
+//            writeOutgoingValue(data: "stop")
+//            start = false;
+//        }
             
     }
 
@@ -378,6 +444,8 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     delayedConnection()
  }
 
+    
+ 
 
 
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -389,9 +457,7 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
     } else if (peripheral.identifier.uuidString == BACK_PERIPHERAL_IDENTIFIER) {
         print("BACK value updated!")
     }
-   
     
-
     guard characteristic == rxCharacteristic,
 
           let characteristicValue = characteristic.value,
@@ -404,8 +470,16 @@ class ActiveResultsViewController: UIViewController, CBPeripheralDelegate {
 //    print(Double(trimmedString)!);
     if (isLeg) {
         LegValue?.text = trimmedString;
+        currentLegValue = Int(trimmedString) ?? 70
+        let legValueToDraw = Double(trimmedString) ?? 0.0
+        legPath = nil
+        drawLine(degree:legValueToDraw, inView: cartPlane, path: legPath)
     } else {
         BackValue?.text = trimmedString;
+        currentBackValue = Int(trimmedString) ?? 70
+        let backValueToDraw = Double(trimmedString) ?? 0.0
+        backPath = nil
+        drawLine(degree:backValueToDraw, inView: cartPlane, path: backPath)
     }
     
     NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")

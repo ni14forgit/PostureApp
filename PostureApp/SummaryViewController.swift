@@ -43,8 +43,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         for _ in 0...6 {
             collectedMeasurements.append([])
         }
-        
-        
+    
         
         let realm = try! Realm()
         let str  = "yyyy-MM-dd HH:mm:ss"
@@ -73,7 +72,7 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         
         lastSevenDaysFormatter.reverse()
         
-        let results = realm.objects(MeasurementTwo.self)
+        let results = realm.objects(FinalPostureMeasurement.self)
 //        let results = realm.objects(MeasurementTwo.self)
         
         print("about to nav result")
@@ -81,40 +80,34 @@ class SummaryViewController: UIViewController, ChartViewDelegate {
         for result in results {
             print("results??")
             print(result.timestamp)
+            print(result.activity)
             print(String(result.timestamp[range]))
+            if (result.activity == activity){
+                print("activity matched")
             if hashMapOfPastSevenDays[String(result.timestamp.prefix(10))] != nil {
                 print("match!!")
                 print(hashMapOfPastSevenDays[result.timestamp])
                 print("\n")
-                
-                // ADD IF STATEMENT HERE ABOUT TYPE OF ACTIVITY
-                
                 collectedMeasurements[hashMapOfPastSevenDays[String(result.timestamp.prefix(10))] ?? 0].append(result.measurement)
+                }
             }
         }
-        
         print("collectedmeasurements")
         print(collectedMeasurements)
         
         var counter = 0;
         for measurement in collectedMeasurements {
             
-            
             if (measurement.count == 0) {
-                
-                
                 print(counter)
-                
                 lastSevenDaysFormatter.remove(at: counter)
                 
             } else {
-                
                 let sumArray = measurement.reduce(0, +)
                 let avgArrayValue = Double(sumArray / measurement.count)
                 finalMeasurements.append(avgArrayValue);
                 counter += 1;
             }
-            
         }
         print("final measurements")
         print(finalMeasurements)

@@ -50,7 +50,7 @@ class TrackViewController: UIViewController, UITableViewDelegate, UITableViewDat
 //        cell.textLabel?.text = "Hello World"
 //        return cell
         let customCell = tableView.dequeueReusableCell(withIdentifier: ActivityTableViewCell.identifer, for: indexPath) as! ActivityTableViewCell
-        customCell.configure(with: products[indexPath.row], imageName: "gear")
+        customCell.configure(with: products[indexPath.row], imageName:products[indexPath.row] )
         return customCell
     }
     

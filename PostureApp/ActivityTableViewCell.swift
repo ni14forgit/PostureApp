@@ -12,7 +12,7 @@ class ActivityTableViewCell: UITableViewCell {
     
     public func configure(with title: String, imageName: String) {
         activityTitle.text = title
-        activityImageView.image = UIImage(systemName: imageName)
+        activityImageView.image = UIImage(named: imageName)
         
     }
     
